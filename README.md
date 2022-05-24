@@ -1,3 +1,7 @@
+# About This 
+
+This project is typing tester app which is similar to the monkeytype.com (you can visit official website on monkeytype.com)
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

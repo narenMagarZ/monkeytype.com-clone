@@ -1,0 +1,42 @@
+.typer-container {
+    border: var(--border);
+    width: 100%;
+    height: auto;
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+
+}
+.typer-container > div{
+    border: var(--border);
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#text-wrapper {
+    border: var(--border);
+    max-width: 60%;
+    align-self: center;
+    height: 105px;
+    /* height: auto; */
+    /* padding: 10px; */
+    overflow: hidden;
+    /* display: flex; */
+    /* justify-content: center; */
+    /* align-items: center; */
+}
+#refresh-btn-wrapper {
+    border: var(--border);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+#refresh-btn:hover  path{
+    stroke: var(--refreshbtnbgcolor);
+}
