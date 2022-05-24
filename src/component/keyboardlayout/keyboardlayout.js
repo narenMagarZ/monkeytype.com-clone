@@ -18,6 +18,11 @@ function KeyboardLayout(){
                 <div>
                 <KeyboardRow row={{keyboardRow:keyboardThirdRow}} />
                 </div>
+                <div>
+                    <button data-key="space" id='space-btn'>
+                        space
+                    </button>
+                </div>
             </div>
         </div>
     )

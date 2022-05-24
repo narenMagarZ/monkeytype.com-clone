@@ -20,7 +20,11 @@ function App() {
           else {
            if(pressedElem) pressedElem.style.color = "#ff0000"
           }
-          
+          let keyboardBtn = null
+          if(pressedKey === ' ') keyboardBtn = document.querySelector(`[data-key="space"]`)
+          else keyboardBtn = document.querySelector(`[data-key=${pressedKey}]`)
+          ColoredPressedKeyButton(keyboardBtn)
+          console.log(keyboardBtn)
           cursorPos ++
         }
         else if(pressedKey === 'Backspace'){
@@ -32,7 +36,12 @@ function App() {
       }
     })
   }
-
+  function ColoredPressedKeyButton(btn){
+    btn.style.background = "#ff0000"
+    setTimeout(() => {
+      btn.style.background = 'transparent'
+    }, 100);
+  }
   ListenTypingEvent()
   return (
     <div className="app">

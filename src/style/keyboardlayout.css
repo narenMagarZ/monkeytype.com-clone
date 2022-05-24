@@ -1,11 +1,10 @@
 .keyboard-layout{
-    /* border: var(--border); */
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 10px 0;
 }
-#keyboard-key-btn{
+#keyboard-key-btn,#space-btn{
     border: var(--keyboardbtnborder);
     padding: 5px;
     width: 60px;
@@ -17,4 +16,7 @@
 }
 .keyboard-layout > div > div{
 text-align: center;
+}
+#space-btn{
+    width: 400px;
 }
