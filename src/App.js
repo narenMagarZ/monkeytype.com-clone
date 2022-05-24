@@ -20,20 +20,19 @@ function App() {
           else {
            if(pressedElem) pressedElem.style.color = "#ff0000"
           }
+          
           cursorPos ++
-          console.log(cursorPos,'cursor position')
         }
         else if(pressedKey === 'Backspace'){
           cursorPos -- 
           if(cursorPos < -1) cursorPos = 0
           prevPressedLetter = textWrapper.children[cursorPos]
           if(prevPressedLetter) prevPressedLetter.style.color = "#000000"
-
         }
       }
     })
   }
-  
+
   ListenTypingEvent()
   return (
     <div className="app">

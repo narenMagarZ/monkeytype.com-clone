@@ -1,6 +1,7 @@
 :root{
   --border:2px solid red;
   --refreshbtnbgcolor:#505050;
+  --keyboardbtnborder:2px solid #5259bd;
 }
 html{
   height: 100%;
