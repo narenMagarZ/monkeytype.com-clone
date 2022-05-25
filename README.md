@@ -1,6 +1,6 @@
 # About This 
 
-This project is typing tester app which is similar to the monkeytype.com (you can visit official website on [monkeytype.com](monkeytype.com))
+This project is typing tester app which is similar to the monkeytype.com (you can visit official website on [https://www.monkeytype.com](monkeytype.com))
 
 # Getting Started with Create React App
 

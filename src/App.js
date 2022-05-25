@@ -1,20 +1,23 @@
 import KeyboardLayout from "./component/keyboardlayout/keyboardlayout";
 import TyperContainer from "./component/typercontainer/typercontainer";
-import { TEXT } from "./component/text";
+import {GetText} from "./component/text";
+import { useEffect, useRef, useState } from "react";
 function App() {
-  let cursorPos = 0
+  let cursorPos = useRef(0)
   let prevPressedLetter = null
-  
+  const [text,setText] = useState('')
+  useEffect(()=>{
+    setText(()=>GetText())
+  },[])
   function ListenTypingEvent(){
+    const textWrapper = document.getElementById('text-wrapper')
     document.body.addEventListener('keydown',(e)=>{
-      const textWrapper = document.getElementById('text-wrapper')
       const pressedKey = e.key
-      console.log(pressedKey)
       if(textWrapper){
         const validPressedKey = /^[A-z\W]{1}$/
         if(validPressedKey.test(pressedKey)){
-          const pressedElem = textWrapper.children[cursorPos]
-          if(TEXT[cursorPos] === pressedKey){
+          const pressedElem = textWrapper.children[cursorPos.current]
+          if(text[cursorPos.current] === pressedKey){
           if(pressedElem) pressedElem.style.color = "#0000ff"
           }
           else {
@@ -24,13 +27,12 @@ function App() {
           if(pressedKey === ' ') keyboardBtn = document.querySelector(`[data-key="space"]`)
           else keyboardBtn = document.querySelector(`[data-key=${pressedKey}]`)
           ColoredPressedKeyButton(keyboardBtn)
-          console.log(keyboardBtn)
-          cursorPos ++
+          cursorPos.current ++
         }
         else if(pressedKey === 'Backspace'){
-          cursorPos -- 
-          if(cursorPos < -1) cursorPos = 0
-          prevPressedLetter = textWrapper.children[cursorPos]
+          cursorPos.current -- 
+          if(cursorPos.current < -1) cursorPos.current = 0
+          prevPressedLetter = textWrapper.children[cursorPos.current]
           if(prevPressedLetter) prevPressedLetter.style.color = "#000000"
         }
       }
@@ -42,10 +44,14 @@ function App() {
       btn.style.background = 'transparent'
     }, 100);
   }
+  function ReplaceText(){
+    cursorPos.current = 0
+    setText(()=>GetText())
+  }
   ListenTypingEvent()
   return (
     <div className="app">
-      <TyperContainer />
+      <TyperContainer textValue={text} replaceText={{ReplaceText}} />
       <KeyboardLayout/>
     </div>
   );

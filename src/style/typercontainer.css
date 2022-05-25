@@ -1,5 +1,4 @@
 .typer-container {
-    border: var(--border);
     width: 100%;
     height: auto;
     padding: 1rem;
@@ -9,23 +8,29 @@
 
 
 }
-.typer-container > div{
-    border: var(--border);
+#text-wrapper-container{
     padding: 0.5rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    position: relative;
 }
-
+#cursor{
+    position: absolute;
+    left: 25%;
+    top: 6px;
+    border-radius: 2px;
+    height: 35px;
+    border: var(--cursor);
+    transform: translateY(0);
+}
 #text-wrapper {
-    border: var(--border);
-    max-width: 60%;
+    max-width: 50%;
     align-self: center;
     height: 105px;
     overflow: hidden;
 }
 #refresh-btn-wrapper {
-    border: var(--border);
     display: flex;
     justify-content: center;
     align-items: center;
