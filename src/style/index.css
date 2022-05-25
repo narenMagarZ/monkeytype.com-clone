@@ -2,7 +2,7 @@
   --border:2px solid red;
   --refreshbtnbgcolor:#505050;
   --keyboardbtnborder:2px solid #5259bd;
-  --cursor:2px solid #9c178a;
+  --cursor:0.15rem solid #9c178a;
 }
 html{
   height: 100%;
@@ -46,10 +46,10 @@ span{
   line-height: 35px;
   font-size: 22px;
   font-weight: 500;
-  /* border: var(--border); */
+  position: relative;
 }
 path {
-  stroke:#ff0000;
+  stroke:#2e2e30;
   stroke-width:4;
   fill:transparent;
 }

@@ -3,7 +3,8 @@ import TyperContainer from "./component/typercontainer/typercontainer";
 import {GetText} from "./component/text";
 import { useEffect, useRef, useState } from "react";
 function App() {
-  let cursorPos = useRef(0)
+  let cursorPos = useRef([0,0])
+  let textIndex = useRef(0)
   let prevPressedLetter = null
   const [text,setText] = useState('')
   useEffect(()=>{
@@ -13,11 +14,17 @@ function App() {
     const textWrapper = document.getElementById('text-wrapper')
     document.body.addEventListener('keydown',(e)=>{
       const pressedKey = e.key
+      const cursor = document.getElementById('cursor')
       if(textWrapper){
         const validPressedKey = /^[A-z\W]{1}$/
         if(validPressedKey.test(pressedKey)){
-          const pressedElem = textWrapper.children[cursorPos.current]
-          if(text[cursorPos.current] === pressedKey){
+          const pressedElem =  document.querySelector(`[data-uid="${textIndex.current}"]`)
+          if(pressedKey === ' '){
+            cursorPos.current = [10 + cursorPos.current[0],0]
+          }
+         else  cursorPos.current = [pressedElem.offsetWidth + cursorPos.current[0],0]
+          cursor.style.transform = `translateX(${cursorPos.current[0]}px)`
+          if(text[textIndex.current] === pressedKey){
           if(pressedElem) pressedElem.style.color = "#0000ff"
           }
           else {
@@ -27,13 +34,15 @@ function App() {
           if(pressedKey === ' ') keyboardBtn = document.querySelector(`[data-key="space"]`)
           else keyboardBtn = document.querySelector(`[data-key=${pressedKey}]`)
           ColoredPressedKeyButton(keyboardBtn)
-          cursorPos.current ++
+          textIndex.current ++
         }
         else if(pressedKey === 'Backspace'){
-          cursorPos.current -- 
-          if(cursorPos.current < -1) cursorPos.current = 0
-          prevPressedLetter = textWrapper.children[cursorPos.current]
+          textIndex.current -- 
+          if(textIndex.current < -1) textIndex.current = 0
+          prevPressedLetter = document.querySelector(`[data-uid="${textIndex.current}"]`)
           if(prevPressedLetter) prevPressedLetter.style.color = "#000000"
+          cursorPos.current = [prevPressedLetter.offsetWidth - cursorPos.current[0],0]
+          cursor.style.transform = `translateX(${cursorPos.current[0]}px)`
         }
       }
     })
@@ -45,7 +54,7 @@ function App() {
     }, 100);
   }
   function ReplaceText(){
-    cursorPos.current = 0
+    textIndex.current = 0
     setText(()=>GetText())
   }
   ListenTypingEvent()

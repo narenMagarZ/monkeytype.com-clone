@@ -17,26 +17,39 @@
 }
 #cursor{
     position: absolute;
-    left: 25%;
-    top: 6px;
+    top: 0;
+    left: -2px;
     border-radius: 2px;
     height: 35px;
     border: var(--cursor);
-    transform: translateY(0);
+    transition: 0.1s linear;
 }
 #text-wrapper {
     max-width: 50%;
     align-self: center;
-    height: 105px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    height: 115px;
     overflow: hidden;
+    padding: 5px;
+    position: relative;
+    letter-spacing: 1px;
 }
 #refresh-btn-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: 20px;
 }
 
 
 #refresh-btn:hover  path{
     stroke: var(--refreshbtnbgcolor);
+}
+#word{
+    margin-right: 10px ;
+}
+.active{
+    position: relative;
 }
