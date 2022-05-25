@@ -2,10 +2,16 @@ import KeyboardLayout from "./component/keyboardlayout/keyboardlayout";
 import TyperContainer from "./component/typercontainer/typercontainer";
 import {GetText} from "./component/text";
 import { useEffect, useRef, useState } from "react";
+
 function App() {
   let cursorPos = useRef([0,0])
   let textIndex = useRef(0)
   let prevPressedLetter = null
+  let prevActiveWrapperParent = useRef(null)
+  
+  useEffect(()=>{
+    prevActiveWrapperParent.current = document.querySelector(`[data-id="0"]`) || null
+  })
   const [text,setText] = useState('')
   useEffect(()=>{
     setText(()=>GetText())
@@ -19,11 +25,19 @@ function App() {
         const validPressedKey = /^[A-z\W]{1}$/
         if(validPressedKey.test(pressedKey)){
           const pressedElem =  document.querySelector(`[data-uid="${textIndex.current}"]`)
-          if(pressedKey === ' '){
-            cursorPos.current = [10 + cursorPos.current[0],0]
+          if(prevActiveWrapperParent.current !== pressedElem.parentElement && prevActiveWrapperParent.current){
+            prevActiveWrapperParent.current.classList.remove('active')
+            prevActiveWrapperParent.current = pressedElem.parentElement
+            prevActiveWrapperParent.current.setAttribute('class','active')
+            prevActiveWrapperParent.current.appendChild(cursor)
+            cursor.style.transform = `translateX(0px)`
+            cursorPos.current = [0,0]
           }
-         else  cursorPos.current = [pressedElem.offsetWidth + cursorPos.current[0],0]
-          cursor.style.transform = `translateX(${cursorPos.current[0]}px)`
+         else {
+           cursorPos.current = [pressedElem.offsetWidth + cursorPos.current[0],0]
+           cursor.style.transform = `translateX(${cursorPos.current[0]}px)`
+
+         } 
           if(text[textIndex.current] === pressedKey){
           if(pressedElem) pressedElem.style.color = "#0000ff"
           }

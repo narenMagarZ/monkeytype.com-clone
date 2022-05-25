@@ -1,24 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react'
 import '../../style/typercontainer.css'
-
+import {useSelector,useDispatch} from 'react-redux'
+import { ActiveWordWrapper } from '../../globalstate/action'
 function TyperContainer({textValue,replaceText}){
-    
-    const [activeWordWrapper,setActiveWordWrapper] = useState(null)
-    useEffect(()=>{
-        if(activeWordWrapper){
-            const cursor  = document.createElement('div')
-            cursor.setAttribute('id','cursor')
-            console.log('done done ')
-            console.log(cursor)
-            activeWordWrapper.appendChild(cursor)
-        }
-    },[activeWordWrapper])
-
-
-
+    // const activeWordWrapper = useSelector((state)=>state.SetActiveWordWrapper)
+    // const dispatch = useDispatch()
     const isReplaced = useRef(false)
     let textWrapperContainer = useRef(null)
     let textWrapper = useRef(null)
+    const activeWordWrapper = useRef(null)
     function AttachTextToTextWrapper(){
         textWrapperContainer.current = document.getElementById('text-wrapper-container')
         textWrapper.current = document.getElementById('text-wrapper')
@@ -30,18 +20,22 @@ function TyperContainer({textValue,replaceText}){
                 isReplaced.current = false
             }
             let keyWrapper = document.createElement('div')
-            let isWordWrapperActive = false
             for(let i = 0 ; i < textValue.length ; i++){
                 keyWrapper.setAttribute('id','word')
-                if(!isWordWrapperActive){
+                if(!activeWordWrapper.current){
                     keyWrapper.setAttribute('class','active')
-                    setActiveWordWrapper(keyWrapper)
+                    keyWrapper.setAttribute('data-id',`${i}`)
+                    // dispatch(ActiveWordWrapper(keyWrapper))
+                    activeWordWrapper.current = keyWrapper
+                    const cursor  = document.createElement('div')
+                    cursor.setAttribute('id','cursor')
+                    activeWordWrapper.current.appendChild(cursor)
                     console.log('passed')
-                    isWordWrapperActive = true
                 }
                 if(textValue[i] === ' '){ // check for space
                     if(textWrapper.current) textWrapper.current.appendChild(keyWrapper)
                     keyWrapper = document.createElement('div')
+                    keyWrapper.setAttribute('data-id',`${i}`)
                 }
                 const word = document.createElement('span')
                 word.textContent = textValue[i]
@@ -51,7 +45,7 @@ function TyperContainer({textValue,replaceText}){
     
         }
     }
-    useEffect(AttachTextToTextWrapper,[textValue,replaceText])
+    useEffect(AttachTextToTextWrapper,[textValue, replaceText])
     function RefreshText(){
         isReplaced.current = true
         AttachTextToTextWrapper()
