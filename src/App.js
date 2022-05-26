@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 function App() {
   let cursorPos = useRef([0,0])
   let textIndex = useRef(0)
-  let prevPressedLetter = null
+  let prevPressedKey = null
   let prevActiveWrapperParent = useRef(null)
   
   useEffect(()=>{
@@ -52,11 +52,35 @@ function App() {
         }
         else if(pressedKey === 'Backspace'){
           textIndex.current -- 
-          if(textIndex.current < -1) textIndex.current = 0
-          prevPressedLetter = document.querySelector(`[data-uid="${textIndex.current}"]`)
-          if(prevPressedLetter) prevPressedLetter.style.color = "#000000"
-          cursorPos.current = [prevPressedLetter.offsetWidth - cursorPos.current[0],0]
-          cursor.style.transform = `translateX(${cursorPos.current[0]}px)`
+          if(textIndex.current < 0) textIndex.current = 0
+          console.log(textIndex.current)
+          prevPressedKey = document.querySelector(`[data-uid="${textIndex.current}"]`)
+          if(prevPressedKey.textContent === ' '){
+            prevActiveWrapperParent.current = document.querySelector(`[data-uid="${textIndex.current - 1}"]`).parentElement
+            console.log(prevActiveWrapperParent.current,'this is parent element')
+            console.log(prevPressedKey.parentElement,'this is prev parent element')
+            prevPressedKey.parentElement.classList.remove('active')
+            prevActiveWrapperParent.current.appendChild(cursor)
+            prevActiveWrapperParent.current.setAttribute('class','active')
+            cursor.style.transition = '0ms'
+            cursor.style.transform = `translateX(${prevActiveWrapperParent.current.clientWidth}px)`
+            cursorPos.current = [prevActiveWrapperParent.current.clientWidth, 0]
+            setTimeout(() => {
+              cursor.style.transition = '0.1s linear'
+              
+            }, 50);
+          }
+          // else if(prevActiveWrapperParent.current !== prevPressedKey.parentElement){
+          //   console.log('parent is changed')
+          //   if(prevPressedKey) prevPressedKey.style.color = "#000000"
+          //   prevActiveWrapperParent.current = prevPressedKey.parentElement
+          // }
+          else {
+            if(prevPressedKey) prevPressedKey.style.color = "#000000"
+            cursorPos.current = [ cursorPos.current[0] - prevPressedKey.offsetWidth,0]
+            console.log(cursorPos.current,'cursorpos')
+            cursor.style.transform = `translateX(${cursorPos.current[0]}px)`
+          }
         }
       }
     })
@@ -67,14 +91,10 @@ function App() {
       btn.style.background = 'transparent'
     }, 100);
   }
-  function ReplaceText(){
-    textIndex.current = 0
-    setText(()=>GetText())
-  }
   ListenTypingEvent()
   return (
     <div className="app">
-      <TyperContainer textValue={text} replaceText={{ReplaceText}} />
+      <TyperContainer textValue={text}  />
       <KeyboardLayout/>
     </div>
   );

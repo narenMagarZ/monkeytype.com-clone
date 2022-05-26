@@ -2,23 +2,16 @@ import React, { useEffect, useRef, useState } from 'react'
 import '../../style/typercontainer.css'
 import {useSelector,useDispatch} from 'react-redux'
 import { ActiveWordWrapper } from '../../globalstate/action'
-function TyperContainer({textValue,replaceText}){
+function TyperContainer({textValue}){
     // const activeWordWrapper = useSelector((state)=>state.SetActiveWordWrapper)
     // const dispatch = useDispatch()
-    const isReplaced = useRef(false)
     let textWrapperContainer = useRef(null)
     let textWrapper = useRef(null)
     const activeWordWrapper = useRef(null)
     function AttachTextToTextWrapper(){
         textWrapperContainer.current = document.getElementById('text-wrapper-container')
         textWrapper.current = document.getElementById('text-wrapper')
-        const {ReplaceText} = replaceText
         if(textWrapper){
-            if(isReplaced.current === true){
-                textWrapper.current.innerHTML = ''
-                ReplaceText()
-                isReplaced.current = false
-            }
             let keyWrapper = document.createElement('div')
             for(let i = 0 ; i < textValue.length ; i++){
                 keyWrapper.setAttribute('id','word')
@@ -30,7 +23,6 @@ function TyperContainer({textValue,replaceText}){
                     const cursor  = document.createElement('div')
                     cursor.setAttribute('id','cursor')
                     activeWordWrapper.current.appendChild(cursor)
-                    console.log('passed')
                 }
                 if(textValue[i] === ' '){ // check for space
                     if(textWrapper.current) textWrapper.current.appendChild(keyWrapper)
@@ -45,17 +37,14 @@ function TyperContainer({textValue,replaceText}){
     
         }
     }
-    useEffect(AttachTextToTextWrapper,[textValue, replaceText])
+    useEffect(AttachTextToTextWrapper,[textValue])
     function RefreshText(){
-        isReplaced.current = true
-        AttachTextToTextWrapper()
+    
     }
     return(
         <div className='typer-container'>
             <div id='text-wrapper-container'>
                 <div id='text-wrapper'>
-                {/* <div id='cursor'>
-                </div> */}
                 </div>
                 <div id='refresh-btn-wrapper'>
                     <button onClick={RefreshText} id='refresh-btn'>
