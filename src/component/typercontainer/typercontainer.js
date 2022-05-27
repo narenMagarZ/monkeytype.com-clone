@@ -1,45 +1,48 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import '../../style/typercontainer.css'
 import {useSelector,useDispatch} from 'react-redux'
-import { ActiveWordWrapper } from '../../globalstate/action'
-function TyperContainer({textValue}){
-    // const activeWordWrapper = useSelector((state)=>state.SetActiveWordWrapper)
-    // const dispatch = useDispatch()
+import {  LoadNewText } from '../../globalstate/action'
+import { GetText } from '../text'
+function TyperContainer(){
+
+  const TEXT = useSelector((textState)=>textState.LoadNewText)
+  const loadTextDispatcher = useDispatch()
     let textWrapperContainer = useRef(null)
     let textWrapper = useRef(null)
     const activeWordWrapper = useRef(null)
     function AttachTextToTextWrapper(){
         textWrapperContainer.current = document.getElementById('text-wrapper-container')
         textWrapper.current = document.getElementById('text-wrapper')
-        if(textWrapper){
+        if(textWrapper && TEXT){
             let keyWrapper = document.createElement('div')
-            for(let i = 0 ; i < textValue.length ; i++){
+
+            for(let i = 0 ; i < TEXT.length ; i++){
                 keyWrapper.setAttribute('id','word')
                 if(!activeWordWrapper.current){
                     keyWrapper.setAttribute('class','active')
                     keyWrapper.setAttribute('data-id',`${i}`)
-                    // dispatch(ActiveWordWrapper(keyWrapper))
                     activeWordWrapper.current = keyWrapper
                     const cursor  = document.createElement('div')
                     cursor.setAttribute('id','cursor')
                     activeWordWrapper.current.appendChild(cursor)
                 }
-                if(textValue[i] === ' '){ // check for space
+                if(TEXT[i] === ' '){ // check for space
                     if(textWrapper.current) textWrapper.current.appendChild(keyWrapper)
                     keyWrapper = document.createElement('div')
                     keyWrapper.setAttribute('data-id',`${i}`)
                 }
                 const word = document.createElement('span')
-                word.textContent = textValue[i]
+                word.textContent = TEXT[i]
                 word.setAttribute('data-uid',`${i}`)   
                 keyWrapper.appendChild(word)
             }
     
         }
     }
-    useEffect(AttachTextToTextWrapper,[textValue])
+    useEffect(AttachTextToTextWrapper,[TEXT])
     function RefreshText(){
-    
+        loadTextDispatcher(LoadNewText(GetText()))
+        AttachTextToTextWrapper()
     }
     return(
         <div className='typer-container'>

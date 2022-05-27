@@ -22,7 +22,7 @@
     border-radius: 2px;
     height: 35px;
     border: var(--cursor);
-    transition: 0.1s linear;
+    transition: 0.09s linear;
 }
 #text-wrapper {
     max-width: 50%;

@@ -1,8 +1,7 @@
 
-
-export const ActiveWordWrapper = (wrapper)=>{
+export const LoadNewText =(text)=>{
     return {
-        type:"ACTIVEWORDWRAPPER",
-        wrapper
+        type:'CREATE_NEW_TEXT',
+        newText:text
     }
 }

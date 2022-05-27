@@ -1,11 +1,13 @@
 import { combineReducers } from "redux";
 
 
-// reducer takes the current state and action as arguments and return the new state 
-export const SetActiveWordWrapper = (initialState=null,{type,wrapper})=>{
-    if(type === 'ACTIVEWORDWRAPPER') return wrapper
-    else return initialState
+
+export const LoadNewText = (prevText = null,{type,newText})=>{
+if(type === 'CREATE_NEW_TEXT') return newText
+else return prevText
+
 }
 export default combineReducers({
-SetActiveWordWrapper
-})
+    LoadNewText
+    })
+    
