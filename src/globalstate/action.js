@@ -6,3 +6,10 @@ export const LoadNewText =(text,textIndex)=>{
         index:textIndex
     }
 }
+export const ComputeTypedKeyInfo = (matchedKey,unmatchedKey)=>{
+    return{
+        type:"TYPED_KEY_INFO",
+        matchedKey,
+        unmatchedKey
+    }
+}

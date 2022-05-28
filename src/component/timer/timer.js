@@ -1,16 +1,20 @@
 import { useEffect, useRef, useState } from 'react'
 import '../../style/timer.css'
-function Timer({start}){
-    console.log('rerenderd')
+function Timer({start,typedKeyInfo}){
     const [timerValue,setTimerValue] = useState(30)
     const timerTimeOut = useRef(null)
+    const WPM = useRef(0)
+    const {matchedKey,unmatchedKey} = typedKeyInfo
     useEffect(()=>{
-        console.log(timerValue,'timer value from useEffect')
         if(timerValue === 0){
             clearInterval(timerTimeOut.current)
+            calculateWPM()
         }
     },[timerValue])
-    
+    function calculateWPM(){
+        WPM.current =parseInt(matchedKey / (5 * 0.5))
+        console.log(WPM.current,'this is the wpm')
+    }
     function TimerStarter(){
         setTimerValue((initTimerValue)=>{
             return initTimerValue - 1
