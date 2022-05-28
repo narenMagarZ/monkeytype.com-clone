@@ -13,5 +13,5 @@ const TEXTS = [
 
 export function GetText(){
     const textIndex = Math.random().toString().substring(2,3)
-    return TEXTS[textIndex].toLowerCase().trim()
+    return {text:TEXTS[textIndex].toLowerCase().trim(),index:textIndex }
 }

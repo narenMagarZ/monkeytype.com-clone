@@ -1,37 +1,39 @@
 import KeyboardLayout from "./component/keyboardlayout/keyboardlayout";
 import TyperContainer from "./component/typercontainer/typercontainer";
-import {GetText} from "./component/text";
-import { useEffect, useRef } from "react";
+import {  useEffect, useRef, useState } from "react";
 import ScrollTextWrapper from "./helpers/scroll_text_wrapper";
 import {useSelector,useDispatch} from 'react-redux'
 import { LoadNewText } from "./globalstate/action";
+import Timer from "./component/timer/timer";
 function App() {
-  
   let cursorPos = useRef([0,0])
   let textIndex = useRef(0)
   let prevPressedKey = null
   let prevActiveWrapperParent = useRef(null)
-  let initialWordWrapperPos = useRef(316.5)
-  const SCROLLDOWNHELPER = 246.5
+  let SCROLLUPBEGINPOS = useRef(0)
+  const textWrapper = useRef(null)
+  const [isTyped,setIsyped] = useState(false)
   let scrollUpValue = useRef(35)
-
-  const loadTextDispatcher = useDispatch()
-  const TEXT = useSelector((textState)=>textState.LoadNewText)
+  const {text} = useSelector((textState)=>textState.LoadNewText)
 
   useEffect(()=>{
+    window.addEventListener('resize',()=>{
+    SCROLLUPBEGINPOS.current = textWrapper.current?.getBoundingClientRect().bottom - 40
+    })
+  },[])
+  useEffect(()=>{
+    textWrapper.current = document.getElementById('text-wrapper')
+    SCROLLUPBEGINPOS.current = textWrapper.current?.getBoundingClientRect().bottom - 40
+    document.body.addEventListener('keydown',ListenKeyDown)
     prevActiveWrapperParent.current = document.querySelector(`[data-id="0"]`) || null
     document.getElementById('text-wrapper')?.scrollTo(0,0)
-  })
-  useEffect(()=>{
-    loadTextDispatcher(LoadNewText(GetText()))
-  },[loadTextDispatcher])
-  function ListenTypingEvent(){
-    const textWrapper = document.getElementById('text-wrapper')
-    document.body.addEventListener('keydown',(e)=>{
-      const pressedKey = e.key
-      const cursor = document.getElementById('cursor')
-      if(textWrapper){
+  },[])
   
+    function ListenKeyDown ({key}){
+      setIsyped(()=>true)
+      const pressedKey = key
+      const cursor = document.getElementById('cursor')
+      if(textWrapper.current){
         const validPressedKey = /^[A-z\W]{1}$/
         if(validPressedKey.test(pressedKey)){
           const pressedElem =  document.querySelector(`[data-uid="${textIndex.current}"]`)
@@ -49,26 +51,27 @@ function App() {
              cursor.style.transform = `translateX(${cursorPos.current[0]}px)`
   
            } 
-            if(TEXT[textIndex.current] === pressedKey){
+            if(text[textIndex.current] === pressedKey){
             if(pressedElem) pressedElem.style.color = "#0000ff"
             }
             else {
              if(pressedElem) pressedElem.style.color = "#ff0000"
             }
             let keyboardBtn = null
-            if(pressedKey === ' ') keyboardBtn = document.querySelector(`[data-key="space"]`)
+            if(pressedKey === ' ') {
+              keyboardBtn = document.querySelector(`[data-key="space"]`)
+            }
             else keyboardBtn = document.querySelector(`[data-key=${pressedKey}]`)
             ColoredPressedKeyButton(keyboardBtn)
-            if(prevActiveWrapperParent.current.getBoundingClientRect().top === initialWordWrapperPos.current){
-              scrollUpValue.current = ScrollTextWrapper(textWrapper,scrollUpValue.current,35)
+            if(prevActiveWrapperParent.current.getBoundingClientRect().top === SCROLLUPBEGINPOS.current){
+              scrollUpValue.current = ScrollTextWrapper(textWrapper.current,scrollUpValue.current)
+              console.log(scrollUpValue.current,'scroll value ')
             }
             textIndex.current ++
           }
         }
         else if(pressedKey === 'Backspace'){
           prevPressedKey = document.querySelector(`[data-uid="${textIndex.current - 1}"]`)
-          console.log(prevPressedKey,'test')
-          console.log(textIndex.current,'text index current')
           if(prevPressedKey){
             if(prevPressedKey.textContent !== ' '){
               textIndex.current -- 
@@ -80,35 +83,19 @@ function App() {
               }
             }
           }
-
-          // if(prevPressedKey.textContent === ' '){
-            // prevActiveWrapperParent.current = document.querySelector(`[data-uid="${textIndex.current - 1}"]`).parentElement
-            // prevPressedKey.parentElement.classList.remove('active')
-            //   prevActiveWrapperParent.current.appendChild(cursor)
-            //   prevActiveWrapperParent.current.setAttribute('class','active')
-            //   cursor.style.transition = '0ms'
-            //   cursor.style.transform = `translateX(${prevActiveWrapperParent.current.clientWidth}px)`
-            //   cursorPos.current = [prevActiveWrapperParent.current.clientWidth, 0]
-            //   setTimeout(() => {
-            //     cursor.style.transition = '0.1s linear'
-            //   }, 50);
-            // }
-          //  if(prevPressedKey.textContent !== ' ') {
-           
-            // }
         }
       }
-    })
-  }
+    }
+
   function ColoredPressedKeyButton(btn){
     btn.style.background = "#ff0000"
     setTimeout(() => {
       btn.style.background = 'transparent'
     }, 100);
   }
-  ListenTypingEvent()
   return (
     <div className="app">
+      <Timer  start={isTyped}/>
       <TyperContainer  />
       <KeyboardLayout/>
     </div>

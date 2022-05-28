@@ -1,0 +1,10 @@
+.timer-container {
+    /* border: var(--border); */
+    width: 50%;
+    align-self: center;
+    padding: 5px;
+
+}
+.timer-wrapper{
+    padding: 0 5px;
+}

@@ -1,6 +1,7 @@
-function ScrollTextWrapper(textWrapper,scrollByValue,scrollStep){
+function ScrollTextWrapper(textWrapper,scrollByValue){
+    const SCROLLSTEP = 35
     textWrapper.scrollTo(0,scrollByValue)
-    return scrollByValue + scrollStep
+    return scrollByValue + SCROLLSTEP
 }
 
 export default ScrollTextWrapper
