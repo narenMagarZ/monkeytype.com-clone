@@ -4,22 +4,21 @@ function Timer({start}){
     console.log('rerenderd')
     const [timerValue,setTimerValue] = useState(30)
     const timerTimeOut = useRef(null)
-    const isDone = useRef(false)
-    function test(){
+    useEffect(()=>{
+        console.log(timerValue,'timer value from useEffect')
+        if(timerValue === 0){
+            clearInterval(timerTimeOut.current)
+        }
+    },[timerValue])
+    
+    function TimerStarter(){
         setTimerValue((initTimerValue)=>{
-            if(initTimerValue === 22)
-            isDone.current = true
             return initTimerValue - 1
         }) 
-        console.log(timerValue,'timer value')
-        if(isDone.current) {
-            console.log('passed')
-            clearInterval(timerTimeOut.current)
-         }
     }
      if(start){
          if(!timerTimeOut.current)
-         timerTimeOut.current = setInterval(test,1000);
+         timerTimeOut.current = setInterval(TimerStarter,1000);
          
      }
     return (
