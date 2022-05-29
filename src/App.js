@@ -1,34 +1,35 @@
 import KeyboardLayout from "./component/keyboardlayout/keyboardlayout";
 import TyperContainer from "./component/typercontainer/typercontainer";
-import {  useCallback, useEffect, useRef, useState } from "react";
+import {  useCallback, useEffect, useReducer, useRef, useState } from "react";
 import ScrollTextWrapper from "./helpers/scroll_text_wrapper";
-import {useSelector,useDispatch} from 'react-redux'
-import { LoadNewText } from "./globalstate/action";
-import { ComputeTypedKeyInfo } from "./globalstate/action";
+import {useSelector} from 'react-redux'
 
 import Timer from "./component/timer/timer";
+import Graph from "./component/graph/graph";
 function App() {
-  let cursorPos = useRef([0,0])
-  let textIndex = useRef(0)
+  const cursorPos = useRef([0,0])
+  const textIndex = useRef(0)
   let prevPressedKey = null
-
-  let prevActiveWrapperParent = useRef(null)
-  let SCROLLUPBEGINPOS = useRef(0)
+  const prevActiveWrapperParent = useRef(null)
+  const SCROLLUPBEGINPOS = useRef(0)
   const textWrapper = useRef(null)
   const [isTyped,setIsyped] = useState(false)
-  let scrollUpValue = useRef(35)
+  const scrollUpValue = useRef(35)
   const {text} = useSelector((textState)=>textState.LoadNewText)
-  const typedKeyInfoDispatcher = useDispatch()
   const [matchedKey,setMatchedKey] = useState(0)
   const [unmatchedKey,setUnmatchedKey] = useState(0)
+
+
+
+
+
+
+
   useEffect(()=>{
     window.addEventListener('resize',()=>{
     SCROLLUPBEGINPOS.current = textWrapper.current?.getBoundingClientRect().bottom - 40
     })
   },[])
-
-  useEffect(()=>{
-  },[matchedKey,unmatchedKey])
 
   useEffect(()=>{
     textWrapper.current = document.getElementById('text-wrapper')
@@ -60,27 +61,21 @@ function App() {
            else {
              cursorPos.current = [pressedElem.offsetWidth + cursorPos.current[0],0]
              cursor.style.transform = `translateX(${cursorPos.current[0]}px)`
-  
            } 
             if(text[textIndex.current] === pressedKey){
             if(pressedElem) pressedElem.style.color = "#0000ff"
             setMatchedKey((prevMatchedKey)=>prevMatchedKey  + 1)
             }
             else {
-            console.log(matchedKey,unmatchedKey,'after matching')
-
              if(pressedElem) pressedElem.style.color = "#ff0000"
              setUnmatchedKey((prevUnmatchedKey)=>prevUnmatchedKey + 1)
             }
             let keyboardBtn = null
-            if(pressedKey === ' ') {
-              keyboardBtn = document.querySelector(`[data-key="space"]`)
-            }
+            if(pressedKey === ' ') keyboardBtn = document.querySelector(`[data-key="space"]`)
             else keyboardBtn = document.querySelector(`[data-key=${pressedKey}]`)
             ColoredPressedKeyButton(keyboardBtn)
             if(prevActiveWrapperParent.current.getBoundingClientRect().top === SCROLLUPBEGINPOS.current){
               scrollUpValue.current = ScrollTextWrapper(textWrapper.current,scrollUpValue.current)
-              console.log(scrollUpValue.current,'scroll value ')
             }
             textIndex.current ++
           }
@@ -128,6 +123,7 @@ function App() {
   }
   return (
     <div className="app">
+      <Graph/>
       <Timer  start={isTyped} typedKeyInfo = {{matchedKey:matchedKey,unmatchedKey:unmatchedKey}}/>
       <TyperContainer  />
       <KeyboardLayout/>
